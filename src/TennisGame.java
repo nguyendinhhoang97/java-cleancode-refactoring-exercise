@@ -1,23 +1,23 @@
 public class TennisGame {
 
-    public static String getScore(String player1Name, String player2Name, int m_score1, int m_score2) {
+    public static String getScore(String player1Name, String player2Name, int player1Score, int player2Score) {
         String score = "";
         int tempScore=0;
-        if (m_score1==m_score2)
+        if (player1Score==player2Score)
         {
-            switch (m_score1)
+            switch (player1Score)
             {
                 case 0:
-                    score = "Love-All";
+                    score = "Love";
                     break;
                 case 1:
-                    score = "Fifteen-All";
+                    score = "Fifteen";
                     break;
                 case 2:
-                    score = "Thirty-All";
+                    score = "Thirty";
                     break;
                 case 3:
-                    score = "Forty-All";
+                    score = "Forty";
                     break;
                 default:
                     score = "Deuce";
@@ -25,20 +25,25 @@ public class TennisGame {
 
             }
         }
-        else if (m_score1>=4 || m_score2>=4)
+        else if (player1Score>=4 || player2Score>=4)
         {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+            int minusResult = player1Score-player2Score;
+            final boolean isAdvantagePlayer1 = minusResult == 1;
+            if (isAdvantagePlayer1) score ="Advantage player1";
+            else {
+                final boolean isAdvantagePlayer2 = minusResult == -1;
+                if (isAdvantagePlayer2) score = "Advantage player2";
+                else {
+                    score = getPlayerWin(minusResult);
+                }
+            }
         }
         else
         {
             for (int i=1; i<3; i++)
             {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
+                if (i == 1) tempScore = player1Score;
+                else { score+="-"; tempScore = player2Score;}
                 switch(tempScore)
                 {
                     case 0:
@@ -56,6 +61,14 @@ public class TennisGame {
                 }
             }
         }
+        return score;
+    }
+
+    private static String getPlayerWin(int minusResult) {
+        String score;
+        final boolean isWinPlayer1 = minusResult >= 2;
+        if (isWinPlayer1) score = "Win for player1";
+        else score = "Win for player2";
         return score;
     }
 }
